@@ -1,3 +1,5 @@
+name: Trigger Kafka on Publish/Unpublish events
+
 on: 
   repository_dispatch:
     types:
