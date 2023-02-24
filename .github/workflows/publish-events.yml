@@ -16,12 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: | 
-      curl --location --request \
-        POST '${{ secrets.KAFKA_TEST_ONDEMAND_ENDPOINT }}' \
+      curl --location --request POST '${{ secrets.KAFKA_TEST_ONDEMAND_ENDPOINT }}' \
         --header 'Content-Type: application/json' \
         --header 'AppKey: ${{ secrets.KAFKA_APPKEY }}' \
         --data-raw '{
-                "paths" : [
-                        "${{ github.event.client_payload.path }}"
-                        ]
+          "paths" : ["${{ github.event.client_payload.path }}"]
         }'
