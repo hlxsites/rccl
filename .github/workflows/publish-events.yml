@@ -12,3 +12,16 @@ jobs:
     - run: |
         echo "Status: ${{ github.event.client_payload.status }}"
         echo "Path: ${{ github.event.client_payload.path }}"
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+    - run: | 
+      curl --location --request \
+        POST '${{ secrets.KAFKA_TEST_ONDEMAND_ENDPOINT }}' \
+        --header 'Content-Type: application/json' \
+        --header 'AppKey: ${{ secrets.KAFKA_APPKEY }}' \
+        --data-raw '{
+                "paths" : [
+                        "${{ github.event.client_payload.path }}"
+                        ]
+        }'
