@@ -4,7 +4,8 @@
  * 
  * Hint: Set your folder ID first! You may copy the folder ID from the browser's address field. 
  *       The folder ID is everything after the 'folders/' portion of the URL.
- * 
+ *       Set the spreadsheetId to wherever you want the data to be saved
+ *       Ensure you have 3 tabs helix-menus, helix-menu-details and helix-metadata defined in the target spreadsheet
  */
  
 // TODO: Set folder ID and target spreadsheet ID and sheet name
