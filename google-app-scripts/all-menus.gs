@@ -4,8 +4,7 @@
  * 
  * Hint: Set your folder ID first! You may copy the folder ID from the browser's address field. 
  *       The folder ID is everything after the 'folders/' portion of the URL.
- *       Set the spreadsheetId to wherever you want the data to be saved
- *       Ensure you have 3 tabs helix-menus, helix-menu-details and helix-metadata defined in the target spreadsheet
+ * 
  */
  
 // TODO: Set folder ID and target spreadsheet ID and sheet name
@@ -34,10 +33,11 @@ async function insertMenuMetadata(metadataSheet, path, filename, url){
     var menuRange = menu.getDataRange();
     var menuValues = menuRange.getValues();
     menuValues.shift();
-    var menuKey = menuValues[0][8];
+    var lastElementPosition = menuValues[0].length;
+    var menuKey = menuValues[0][lastElementPosition-1];
     if (menuValues.length > 1) {
       for (var i=1; i<menuValues.length; i++) {
-        menuValues[i][8] = menuKey;  
+        menuValues[i][8] = menuKey;
       }
     }
     // Logger.log("Last row +1 is: "+(metadataSheet.getLastRow()+1)+", rows: "+menuValues.length+", columns: "+menuValues[0].length);
