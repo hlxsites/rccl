@@ -4,12 +4,13 @@
  * 
  * Hint: Set your folder ID first! You may copy the folder ID from the browser's address field. 
  *       The folder ID is everything after the 'folders/' portion of the URL.
- * 
+ *       Set the spreadsheetId to wherever you want the data to be saved
+ *       Ensure you have 3 tabs helix-menus, helix-menu-details and helix-metadata defined in the target spreadsheet
  */
  
 // TODO: Set folder ID and target spreadsheet ID and sheet name
 var folderId = '17_6aI6Jzn9z3pLpJKHNOBs6fxtfP_a8o';
-var spreadsheetId = '12zQfjqLxRPrg83_KICS6U7U5w-BhG6tPrEqtcM4JIeA';
+var spreadsheetId = '1CL0TPDYxYZFxCbYNL_VOoZZ0KE4egLbJYmRqLiGC734';
 var allmenusIndexSheet = 'helix-menus';
 var allmenusMetadataSheet = 'helix-menu-metadata';
 var allmenusDetailsSheet = 'helix-menu-details';
@@ -87,7 +88,7 @@ async function getFolderTree(folderId, listAll) {
     //Initialize menu details tab
     var menuDetailsSheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName(allmenusDetailsSheet);
     menuDetailsSheet.clear();
-    menuDetailsSheet.appendRow(["hide", "sectionName", "name", "*", "noSugar", "vegan", "vegetarian", "glutenFree", "description", "price", "wineNumber", "glassPrice", "bottlePrice", "menuKey"]);
+    menuDetailsSheet.appendRow(["hide", "sectionName", "name", "*", "noSugar", "vegan", "vegetarian", "glutenFree", "description", "price", "wineNumber", "glassPrice", "bottlePrice", "menukey"]);
     // Get files and folders
     await getChildFolders(parentFolder.getName(), parentFolder, data, sheet, listAll, metadataSheet, menuDetailsSheet);    
   } catch (e) {
