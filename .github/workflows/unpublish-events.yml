@@ -1,9 +1,9 @@
-name: Trigger KV cache and Kafka on Publish events
+name: Trigger KV cache and Kafka on Unpublish events
 
 on: 
   repository_dispatch:
     types:
-      - resource-published
+      - resource-unpublished
 jobs:
   print:
     runs-on: ubuntu-latest
@@ -16,9 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: | 
-        echo "CACHE_ENDPOINT=${{ secrets.CF_WORKER_ENDPOINT }}${{ github.event.client_payload.path }}/save" >> $GITHUB_ENV
+        echo "DELETE_ENDPOINT=${{ secrets.CF_WORKER_ENDPOINT }}${{ github.event.client_payload.path }}/delete" >> $GITHUB_ENV
     - run: | 
-        curl --location --request POST '${{ env.CACHE_ENDPOINT }}' \
+        curl --location --request POST '${{ env.DELETE_ENDPOINT }}' \
           --header 'Content-Type: application/json'    
     - run: | 
         curl --location --request POST '${{ secrets.KAFKA_TEST_ONDEMAND_ENDPOINT }}' \

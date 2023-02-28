@@ -12,7 +12,7 @@
  
 // TODO: Set folder ID and target spreadsheet ID and sheet name
 var folderId = '17_6aI6Jzn9z3pLpJKHNOBs6fxtfP_a8o';
-var spreadsheetId = '1OONWl4fMmXLQz-CE3HOdxH7z6EDQnU_rEhiKqaXQoRQ';
+var spreadsheetId = '1T_9kq7iVUA7R-tw27VIzTh7Nn8mGGB09cb4RzRnE4Z8';
 var targetSheetName = 'menus';
 
 // Main function 1: List all folders, & write into the current sheet.
