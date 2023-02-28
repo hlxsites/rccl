@@ -20,9 +20,9 @@ jobs:
       id: refreshCacheEndpoint
       uses: frabert/replace-string-action@v2
       with:
-        pattern: '\.json$'
+        pattern: '/(\w+)/'
         string: ${{ github.event.client_payload.status == 200 && github.event.client_payload.path }}
-        replace-with: '.json/save'
+        replace-with: '${{ secrets.KAFKA_TEST_ONDEMAND_ENDPOINT }}$1/save'
     - run: | 
         curl --location --request POST '${{ steps.refreshCacheEndpoint.outputs.replaced }}' \
           --header 'Content-Type: application/json'    
