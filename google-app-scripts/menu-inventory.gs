@@ -25,6 +25,30 @@ function listAll(){
   getFolderTree(folderId, true); 
 };
 
+function previewPath(path) {
+
+}
+
+/**
+ * Sanitizes the given string by :
+ * - convert to lower case
+ * - normalize all unicode characters
+ * - replace all non-alphanumeric characters with a dash
+ * - remove all consecutive dashes
+ * - remove all leading and trailing dashes
+ *
+ * @param {string} name
+ * @returns {string} sanitized name
+ */
+function sanitizeName(name) {
+    return name
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
+}
+
 // =================
 // Get Folder Tree
 function getFolderTree(folderId, listAll) {
@@ -36,7 +60,7 @@ function getFolderTree(folderId, listAll) {
     // var file, data, sheet = SpreadsheetApp.getActiveSheet();
     var file, data, sheet = SpreadsheetApp.openById(spreadsheetId).getSheetByName(targetSheetName);
     sheet.clear();
-    sheet.appendRow(["Full Path", "Name", "Date", "Last Updated"]);
+    sheet.appendRow(["Full Path", "Name", "Date", "Last Updated", "URL"]);
     
     // Get files and folders
     getChildFolders(parentFolder.getName(), parentFolder, data, sheet, listAll);
@@ -54,12 +78,12 @@ function getChildFolders(parentName, parent, data, sheet, listAll) {
   while (childFolders.hasNext()) {
     var childFolder = childFolders.next();
     // Logger.log("Folder Name: " + childFolder.getName());
-    data = [ 
-      parentName + "/" + childFolder.getName(),
-      childFolder.getName(),
-      childFolder.getDateCreated(),
-      childFolder.getLastUpdated()
-    ];
+    // data = [ 
+    //   parentName + "/" + childFolder.getName(),
+    //   childFolder.getName(),
+    //   childFolder.getDateCreated(),
+    //   childFolder.getLastUpdated()
+    // ];
     // Write
     // Uncomment to also write folders into the sheet
     // sheet.appendRow(data);
@@ -70,10 +94,11 @@ function getChildFolders(parentName, parent, data, sheet, listAll) {
       var childFile = files.next();
       // Logger.log("File Name: " + childFile.getName());
       data = [ 
-        parentName + "/" + childFolder.getName() + "/" + childFile.getName(),
+        parentName + "/" + sanitizeName(childFolder.getName()) + "/" + sanitizeName(childFile.getName()),
         childFile.getName(),
         childFile.getDateCreated(),
-        childFile.getLastUpdated()
+        childFile.getLastUpdated(),
+        childFile.getUrl()
       ];
       // Write
       sheet.appendRow(data);
