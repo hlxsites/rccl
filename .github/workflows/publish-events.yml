@@ -18,21 +18,6 @@ jobs:
     steps:
     - run: | 
         echo "CACHE_ENDPOINT=${{ secrets.CF_WORKER_ENDPOINT }}${{ github.event.client_payload.path }}/save" >> $GITHUB_ENV
-    # - name: Combine strings
-    #     uses: michpohl/action-concatenate-strings@v1
-    #     id: cacheEndpoint
-    #     with:
-    #       first: ${{ secrets.CF_WORKER_ENDPOINT }}
-    #       second: ${{ github.event.client_payload.path }}
-    #       third: '/save'
-    #       output-var-name: 'CACHE_ENDPOINT'
-    # - name: Refresh Cache endpoint
-    #   id: refreshCacheEndpoint
-    #   uses: frabert/replace-string-action@v2
-    #   with:
-    #     pattern: '^\/(\w+)$'
-    #     string: ${{ github.event.client_payload.path }}
-    #     replace-with: 'https://rccl.adobeaem.workers.dev/$1/save'
     - run: | 
         curl --location --request POST '${{ env.CACHE_ENDPOINT }}' \
           --header 'Content-Type: application/json'    
