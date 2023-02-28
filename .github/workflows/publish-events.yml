@@ -13,8 +13,19 @@ jobs:
         echo "Status: ${{ github.event.client_payload.status }}"
         echo "Path: ${{ github.event.client_payload.path }}"
   trigger:
+    if: (github.event.client_payload.status == 200 || github.event.client_payload.status == 204) && endsWith(github.event.client_payload.path, '.json')
     runs-on: ubuntu-latest
     steps:
+    - name: Refresh Cache endpoint
+      id: refreshCacheEndpoint
+      uses: frabert/replace-string-action@v2
+      with:
+        pattern: '\.json$'
+        string: ${{ github.event.client_payload.status == 200 && github.event.client_payload.path }}
+        replace-with: '.json/save'
+    - run: | 
+        curl --location --request POST '${{ steps.refreshCacheEndpoint.outputs.replaced }}' \
+          --header 'Content-Type: application/json'    
     - run: | 
         curl --location --request POST '${{ secrets.KAFKA_TEST_ONDEMAND_ENDPOINT }}' \
           --header 'Content-Type: application/json' \
