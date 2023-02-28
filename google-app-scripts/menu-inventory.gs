@@ -14,19 +14,53 @@
 var folderId = '17_6aI6Jzn9z3pLpJKHNOBs6fxtfP_a8o';
 var spreadsheetId = '1T_9kq7iVUA7R-tw27VIzTh7Nn8mGGB09cb4RzRnE4Z8';
 var targetSheetName = 'menus';
+var menuIndexPath = '/en/ships/jw/menus';
 
 // Main function 1: List all folders, & write into the current sheet.
-function listFolders(){
-  getFolderTree(folderId, false);
-};
+// function listFolders(){
+//   getFolderTree(folderId, false);
+// };
 
 // Main function 2: List all files & folders, & write into the current sheet.
 function listAll(){
   getFolderTree(folderId, true); 
+  publishMenuIndex();
 };
 
-function previewPath(path) {
+function publishMenuIndex() {
+  // Preview the menu index sheet
+  publishContent(menuIndexPath, false);
+  // Chill for 10 seconds before publishing the menu index sheet
+  Utilities.sleep(10000);
+  // Publish the menu index sheet
+  publishContent(menuIndexPath, true);
+}
 
+function publishContent(path, publish) {
+  try {
+    // Make a POST request to preview/publish the path.
+    // https://admin.hlx.page/preview/hlxsites/rccl/main/en/ships/jw/menus.json
+
+    var url = `https://admin.hlx.page/preview/hlxsites/rccl/main${path}.json`;
+    if (publish) url = `https://admin.hlx.page/live/hlxsites/rccl/main${path}.json`;
+    var data = { };
+    var options = {
+      'method' : 'post',
+      'contentType': 'application/json',
+      'payload' : JSON.stringify(data)
+    };
+    const response = UrlFetchApp.fetch(url, options);
+    if(response && (response.getResponseCode() === 200)) {
+      console.log(response.getResponseCode());
+    } else {
+      // Chill for 10 seconds before retrying
+      Utilities.sleep(10000);
+      // retry one more time
+      publishContent(path, publish);
+    }
+  } catch (e) {
+    console.error(e.toString());
+  }
 }
 
 /**
