@@ -16,15 +16,23 @@ jobs:
     if: (github.event.client_payload.status == 200 || github.event.client_payload.status == 204) && endsWith(github.event.client_payload.path, '.json')
     runs-on: ubuntu-latest
     steps:
-    - name: Refresh Cache endpoint
-      id: refreshCacheEndpoint
-      uses: frabert/replace-string-action@v2
-      with:
-        pattern: '^/(\w+)$'
-        string: ${{ github.event.client_payload.path }}
-        replace-with: 'https://rccl.adobeaem.workers.dev/$1/save'
+    - name: Combine strings
+        uses: michpohl/action-concatenate-strings@v1
+        id: cacheEndpoint
+        with:
+          first: ${{ secrets.CF_WORKER_ENDPOINT }}
+          second: ${{ github.event.client_payload.path }}
+          third: '/save'
+          output-var-name: 'CACHE_ENDPOINT'
+    # - name: Refresh Cache endpoint
+    #   id: refreshCacheEndpoint
+    #   uses: frabert/replace-string-action@v2
+    #   with:
+    #     pattern: '^\/(\w+)$'
+    #     string: ${{ github.event.client_payload.path }}
+    #     replace-with: 'https://rccl.adobeaem.workers.dev/$1/save'
     - run: | 
-        curl --location --request POST '${{ steps.refreshCacheEndpoint.outputs.replaced }}' \
+        curl --location --request POST '${{ steps.cacheEndpoint.outputs.CACHE_ENDPOINT }}' \
           --header 'Content-Type: application/json'    
     - run: | 
         curl --location --request POST '${{ secrets.KAFKA_TEST_ONDEMAND_ENDPOINT }}' \
