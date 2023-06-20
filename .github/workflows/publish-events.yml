@@ -17,6 +17,9 @@ jobs:
     steps:
     - run: | 
         echo "CACHE_ENDPOINT=${{ secrets.CF_WORKER_ENDPOINT }}${{ github.event.client_payload.path }}/save" >> $GITHUB_ENV
+    - run: |
+        PAYLOAD_PATH = "${{ github.event.client_payload.path }}"
+        echo "SP_FILEPATH=${$PAYLOAD_PATH//.json/.xlsx}" >> $GITHUB_ENV
     - run: | 
         curl --location --request POST '${{ env.CACHE_ENDPOINT }}' \
           --header 'Content-Type: application/json'    
@@ -44,3 +47,9 @@ jobs:
             "paths" : ["${{ github.event.client_payload.path }}"]
           }'
       if: (!startsWith(github.event.client_payload.path, '/stage/') && !startsWith(github.event.client_payload.path, '/test/') )
+    - run: | 
+        curl --location --request POST '${{ secrets.POWER_AUTOMATE_ENDPOINT }}' \
+          --header 'Content-Type: application/json' \
+          --data-raw '{
+            "path" : "${{ env.SP_FILEPATH }}"
+          }'
