@@ -23,7 +23,24 @@ jobs:
     - run: | 
         curl --location --request POST '${{ secrets.KAFKA_TEST_ONDEMAND_ENDPOINT }}' \
           --header 'Content-Type: application/json' \
-          --header 'AppKey: ${{ secrets.KAFKA_APPKEY }}' \
+          --header 'AppKey: ${{ secrets.KAFKA_TEST_APPKEY }}' \
           --data-raw '{
             "paths" : ["${{ github.event.client_payload.path }}"]
           }'
+      if: startsWith(github.event.client_payload.path, '/test/')
+    - run: | 
+        curl --location --request POST '${{ secrets.KAFKA_STAGE_ONDEMAND_ENDPOINT }}' \
+          --header 'Content-Type: application/json' \
+          --header 'AppKey: ${{ secrets.KAFKA_STAGE_APPKEY }}' \
+          --data-raw '{
+            "paths" : ["${{ github.event.client_payload.path }}"]
+          }'
+      if: startsWith(github.event.client_payload.path, '/stage/')
+    - run: | 
+        curl --location --request POST '${{ secrets.KAFKA_PROD_ONDEMAND_ENDPOINT }}' \
+          --header 'Content-Type: application/json' \
+          --header 'AppKey: ${{ secrets.KAFKA_PROD_APPKEY }}' \
+          --data-raw '{
+            "paths" : ["${{ github.event.client_payload.path }}"]
+          }'
+      if: (!startsWith(github.event.client_payload.path, '/stage/') && !startsWith(github.event.client_payload.path, '/test/') )
